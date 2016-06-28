@@ -40,7 +40,7 @@ module ActiveAdmin
       #     }
       #   end
       #   @see ActiveAdmin::Axlsx::DSL
-      def initialize(resource_class, options={}, &block)
+      def initialize(resource_class, options = {}, &block)
         @skip_header = false
         @columns = resource_columns(resource_class)
         parse_options options
@@ -50,7 +50,7 @@ module ActiveAdmin
       # The default header style
       # @return [Hash]
       def header_style
-        @header_style ||= { :bg_color => '00', :fg_color => 'FF', :sz => 12, :alignment => { :horizontal => :center } }
+        @header_style ||= {}
       end
 
       # This has can be used to override the default header style for your
@@ -128,8 +128,9 @@ module ActiveAdmin
 
       # Serializes the collection provided
       # @return [Axlsx::Package]
-      def serialize(collection)
-        @collection   = collection
+      def serialize(collection, view_context)
+        @collection = collection
+        @view_context = view_context
         apply_filter @before_filter
         export_collection(collection)
         apply_filter @after_filter
@@ -139,7 +140,6 @@ module ActiveAdmin
       protected
 
       class Column
-
         def initialize(name, block = nil)
           @name = name
           @data = block || @name
@@ -207,7 +207,7 @@ module ActiveAdmin
       end
 
       def sheet
-        @sheet ||= package.workbook.add_worksheet
+        @sheet ||= package.workbook.add_worksheet(name: 'Sheet')
       end
 
       def package
@@ -221,6 +221,14 @@ module ActiveAdmin
       def resource_columns(resource)
         [Column.new(:id)] + resource.content_columns.map do |column|
           Column.new(column.name.to_sym)
+        end
+      end
+
+      def method_missing(method_name, *arguments)
+        if @view_context.respond_to? method_name
+          @view_context.send method_name, *arguments
+        else
+          super
         end
       end
     end
