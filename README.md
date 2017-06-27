@@ -29,7 +29,7 @@ Here are a few quick examples of things you can easily tweak.
 Axlsx supports A LOT of the specification so if you are looking to do
 something adventurous please ping me on irc. (freenode#axlsx)
 
-##localize column headers
+## Localize column headers
 
 ```ruby
 #app/admin/posts.rb
@@ -38,7 +38,7 @@ ActiveAdmin.register Post do
 end
 ```
 
-##Use blocks for adding computed fields
+## Use blocks for adding computed fields
 
 ```ruby
 #app/admin/posts.rb
@@ -49,7 +49,7 @@ ActiveAdmin.register Post do
 end
 ```
 
-##Change the column header style
+## Change the column header style
 
 ```ruby
 #app/admin/posts.rb
@@ -59,7 +59,7 @@ ActiveAdmin.register Post do
 end
 ```
 
-##Remove columns
+## Remove columns
 
 ```ruby
 #app/admin/posts.rb
@@ -68,7 +68,7 @@ ActiveAdmin.register Post do
 end
 ```
 
-#Using the DSL
+# Using the DSL
 
 Everything that you do with the config'd default builder can be done via
 the resource DSL.
@@ -122,7 +122,7 @@ ActiveAdmin.register Post do
 end
 ```
 
-#Specs
+# Specs
 ------
 Running specs for this gem requires that you construct a rails application.
 To execute the specs, navigate to the gem directory,
@@ -170,7 +170,7 @@ bundle exec rake
   - Fixed DSL referencing
   - Added delete_columns to builder and DSL
 
-#Copyright and License
+# Copyright and License
 ----------
 
 activeadmin-axlsx &copy; 2012 ~ 2013 by [Randy Morgan](mailto:digial.ipseity@gmail.com).

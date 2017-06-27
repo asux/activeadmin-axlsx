@@ -1,6 +1,5 @@
 require 'spec_helper'
 describe ActiveAdmin::ResourceController do
-
   let(:mime) { Mime::Type.lookup_by_extension(:xlsx) }
 
   let(:request) do
@@ -18,17 +17,17 @@ describe ActiveAdmin::ResourceController do
     end
   end
 
-  let(:filename) { "#{controller.resource_class.to_s.downcase.pluralize}-#{Time.now.strftime("%Y-%m-%d")}.xlsx" }
+  let(:filename) { "#{controller.resource_class.to_s.downcase.pluralize}-#{Time.now.strftime('%Y-%m-%d')}.xlsx" }
 
   it 'generates an xlsx filename' do
     controller.xlsx_filename.should == filename
   end
 
   context 'when making requests with the xlsx mime type' do
-     it 'returns xlsx attachment when requested' do
+    it 'returns xlsx attachment when requested' do
       controller.send :index
-      response.headers["Content-Disposition"].should == "attachment; filename=\"#{filename}\""
-      response.headers["Content-Transfer-Encoding"].should == 'binary'
+      response.headers['Content-Disposition'].should == "attachment; filename=\"#{filename}\""
+      response.headers['Content-Transfer-Encoding'].should == 'binary'
     end
 
     it 'returns max_csv_records for per_page' do
@@ -41,4 +40,3 @@ describe ActiveAdmin::ResourceController do
     end
   end
 end
-

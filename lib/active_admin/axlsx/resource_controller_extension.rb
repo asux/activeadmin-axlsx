@@ -11,7 +11,7 @@ module ActiveAdmin
         super do |format|
           format.xlsx do
             xlsx = active_admin_config.xlsx_builder.serialize(collection)
-            send_data xlsx, :filename => "#{xlsx_filename}", :type => Mime::Type.lookup_by_extension(:xlsx)
+            send_data xlsx, filename: xlsx_filename.to_s, type: Mime::Type.lookup_by_extension(:xlsx)
           end
         end
       end
@@ -28,7 +28,7 @@ module ActiveAdmin
       # Returns a filename for the xlsx file using the collection_name
       # and current date such as 'my-articles-2011-06-24.xlsx'.
       def xlsx_filename
-        "#{resource_collection_name.to_s.gsub('_', '-')}-#{Time.now.strftime("%Y-%m-%d")}.xlsx"
+        "#{resource_collection_name.to_s.tr('_', '-')}-#{Time.now.strftime('%Y-%m-%d')}.xlsx"
       end
     end
   end

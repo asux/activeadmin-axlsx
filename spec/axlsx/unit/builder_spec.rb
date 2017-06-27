@@ -3,15 +3,14 @@ require 'spec_helper'
 module ActiveAdmin
   module Axlsx
     describe Builder do
-
       let(:builder) { Builder.new(Post) }
       let(:content_columns) { Post.content_columns }
 
       context 'the default builder' do
         subject { builder }
-        its(:header_style) { should == { :bg_color => '00', :fg_color => 'FF', :sz => 12, :alignment => { :horizontal => :center } } }
+        its(:header_style) { should == { bg_color: '00', fg_color: 'FF', sz: 12, alignment: { horizontal: :center } } }
         its(:i18n_scope) { should be_nil }
-        its("columns.size") { should == content_columns.size + 1 }
+        its('columns.size') { should == content_columns.size + 1 }
       end
 
       context 'customizing a builder' do
@@ -22,7 +21,7 @@ module ActiveAdmin
 
         it 'lets us say we dont want the header' do
           builder.skip_header
-          builder.instance_values["skip_header"].should be_true
+          builder.instance_values['skip_header'].should be_true
         end
 
         it 'lets us add custom columns' do
@@ -36,8 +35,7 @@ module ActiveAdmin
         end
 
         context 'Using Procs for delayed content generation' do
-
-          let(:post) { Post.new(:title => "Hot Dawg") }
+          let(:post) { Post.new(title: 'Hot Dawg') }
 
           before do
             builder.column(:hoge) { |resource| "#{resource.title} - with cheese" }
@@ -48,7 +46,7 @@ module ActiveAdmin
           end
 
           it 'evaluates custom column blocks' do
-            builder.columns.last.data.call(post).should == "Hot Dawg - with cheese"
+            builder.columns.last.data.call(post).should == 'Hot Dawg - with cheese'
           end
         end
       end
@@ -58,11 +56,11 @@ module ActiveAdmin
 
         let!(:posts) {  [Post.new(title: 'bob', body: 'is a swell guy', author: users.first)] }
 
-        let!(:builder) {
-          Builder.new(Post, header_style: { sz: 10, fg_color: "FF0000" }, i18n_scope: [:axlsx, :post]) do
+        let!(:builder) do
+          Builder.new(Post, header_style: { sz: 10, fg_color: 'FF0000' }, i18n_scope: %i[axlsx post]) do
             skip_header
           end
-        }
+        end
 
         before do
           User.stub!(:all) { users }
@@ -85,13 +83,13 @@ module ActiveAdmin
 
         let!(:posts) {  [Post.new(title: 'bob', body: 'is a swell guy', author: users.first)] }
 
-        let!(:builder) {
-          Builder.new(Post, header_style: { sz: 10, fg_color: "FF0000" }, i18n_scope: [:axlsx, :post]) do
+        let!(:builder) do
+          Builder.new(Post, header_style: { sz: 10, fg_color: 'FF0000' }, i18n_scope: %i[axlsx post]) do
             skip_header
             whitelist
             column :title
           end
-        }
+        end
 
         before do
           User.stub!(:all) { users }
@@ -111,16 +109,15 @@ module ActiveAdmin
       end
 
       context 'Sheet generation with a highly customized configuration.' do
-
         let!(:users) {  [User.new(first_name: 'bob', last_name: 'nancy')] }
 
         let!(:posts) {  [Post.new(title: 'bob', body: 'is a swell guy', author: users.first)] }
 
-        let!(:builder) {
-          Builder.new(Post, header_style: { sz: 10, fg_color: "FF0000" }, i18n_scope: [:axlsx, :post]) do
+        let!(:builder) do
+          Builder.new(Post, header_style: { sz: 10, fg_color: 'FF0000' }, i18n_scope: %i[axlsx post]) do
             delete_columns :id, :created_at, :updated_at
             column(:author) { |resource| "#{resource.author.first_name} #{resource.author.last_name}" }
-            after_filter { |sheet|
+            after_filter do |sheet|
               sheet.add_row []
               sheet.add_row ['Author Name', 'Number of Posts']
               data = []
@@ -130,20 +127,20 @@ module ActiveAdmin
                 labels << "#{user.first_name} #{user.last_name}"
                 sheet.add_row [labels.last, data.last]
               end
-              chart_color =  %w(88F700 279CAC B2A200 FD66A3 F20062 C8BA2B 67E6F8 DFFDB9 FFE800 B6F0F8)
-              sheet.add_chart(::Axlsx::Pie3DChart, :title => "post by author") do |chart|
-                chart.add_series :data => data, :labels => labels, :colors => chart_color
+              chart_color = %w[88F700 279CAC B2A200 FD66A3 F20062 C8BA2B 67E6F8 DFFDB9 FFE800 B6F0F8]
+              sheet.add_chart(::Axlsx::Pie3DChart, title: 'post by author') do |chart|
+                chart.add_series data: data, labels: labels, colors: chart_color
                 chart.start_at 4, 0
                 chart.end_at 7, 20
               end
-            }
+            end
             before_filter do |sheet|
               collection.first.author.first_name = 'Set In Proc'
               sheet.add_row ['Created', Time.zone.now]
               sheet.add_row []
             end
           end
-        }
+        end
 
         before(:all) do
           User.stub!(:all) { users }
@@ -166,7 +163,7 @@ module ActiveAdmin
         end
 
         it 'uses the specified i18n_scope' do
-          builder.i18n_scope.should == [:axlsx, :post]
+          builder.i18n_scope.should == %i[axlsx post]
         end
 
         it 'translates the header row based on our i18n scope' do
@@ -175,7 +172,7 @@ module ActiveAdmin
         end
 
         it 'processes the before filter' do
-          @package.workbook.worksheets.first["A1"].value.should == 'Created'
+          @package.workbook.worksheets.first['A1'].value.should == 'Created'
         end
 
         it 'lets us work against the collection in the before filter' do
