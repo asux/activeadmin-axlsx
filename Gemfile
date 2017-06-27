@@ -4,7 +4,7 @@ gemspec
 
 group :development, :test do
   gem 'haml', '~> 3.1.1', require: false
-  gem 'json', '1.8.2'
+  gem 'json', '~> 1.8.2'
   gem 'rails-i18n' # Gives us default i18n for many languages
   gem 'rdiscount' # For yard
   gem 'rubyzip', '~> 1.1.7'
@@ -12,7 +12,7 @@ group :development, :test do
   gem 'sqlite3', '1.3.9'
   gem 'yard'
 end
-gem 'simplecov', require: false, group: :test
+
 group :test do
   gem 'capybara',       '1.1.2'
   gem 'cucumber-rails', '1.2.1', require: false
@@ -27,4 +27,5 @@ group :test do
   gem 'rspec-rails', '~> 2.9.0'
   gem 'sass-rails'
   gem 'shoulda-matchers', '1.0.0'
+  gem 'simplecov', require: false
 end
