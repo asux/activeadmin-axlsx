@@ -40,7 +40,7 @@ module ActiveAdmin
       #     }
       #   end
       #   @see ActiveAdmin::Axlsx::DSL
-      def initialize(resource_class, options = {}, &block)
+      def initialize(resource_class, options={}, &block)
         @skip_header = false
         @columns = resource_columns(resource_class)
         parse_options options
@@ -50,7 +50,7 @@ module ActiveAdmin
       # The default header style
       # @return [Hash]
       def header_style
-        @header_style ||= {}
+        @header_style ||= { :bg_color => '00', :fg_color => 'FF', :sz => 12, :alignment => { :horizontal => :center } }
       end
 
       # This has can be used to override the default header style for your
@@ -74,7 +74,7 @@ module ActiveAdmin
 
       # This is the I18n scope that will be used when looking up your
       # colum names in the current I18n locale.
-      # If you set it to [:active_admin, :resources, :posts] the
+      # If you set it to [:active_admin, :resources, :posts] the 
       # serializer will render the value at active_admin.resources.posts.title in the
       # current translations
       # @note If you do not set this, the column name will be titleized.
@@ -128,9 +128,8 @@ module ActiveAdmin
 
       # Serializes the collection provided
       # @return [Axlsx::Package]
-      def serialize(collection, view_context)
+      def serialize(collection)
         @collection = collection
-        @view_context = view_context
         apply_filter @before_filter
         export_collection(collection)
         apply_filter @after_filter
@@ -140,8 +139,9 @@ module ActiveAdmin
       protected
 
       class Column
+
         def initialize(name, block = nil)
-          @name = name
+          @name = name.to_sym
           @data = block || @name
         end
 
@@ -207,7 +207,7 @@ module ActiveAdmin
       end
 
       def sheet
-        @sheet ||= package.workbook.add_worksheet(name: 'Sheet')
+        @sheet ||= package.workbook.add_worksheet(:name => "Worksheet")
       end
 
       def package
@@ -221,14 +221,6 @@ module ActiveAdmin
       def resource_columns(resource)
         [Column.new(:id)] + resource.content_columns.map do |column|
           Column.new(column.name.to_sym)
-        end
-      end
-
-      def method_missing(method_name, *arguments)
-        if @view_context.respond_to? method_name
-          @view_context.send method_name, *arguments
-        else
-          super
         end
       end
     end
